@@ -130,3 +130,33 @@ document.getElementById('profileImage').addEventListener('change', function (eve
         preview.src = '';
     }
 });
+document.addEventListener('DOMContentLoaded', function () {
+    disablePastDates();
+});
+    // Toggle modal
+    document.getElementById("profileToggle").onclick = function () {
+        document.getElementById("profileModal").style.display = "block";
+    };
+    document.getElementById("closeModal").onclick = function () {
+        document.getElementById("profileModal").style.display = "none";
+    };
+
+    // Hide modal when clicking outside
+    window.onclick = function (event) {
+        if (event.target == document.getElementById("profileModal")) {
+            document.getElementById("profileModal").style.display = "none";
+        }
+    };
+
+    // Sidebar submenu toggle
+    function toggleSubmenu(id) {
+        document.getElementById(id).classList.toggle("hidden");
+    }
+
+    // Section switching
+    function showSection(id) {
+        document.querySelectorAll('.content > div').forEach(div => {
+            if (div.id !== 'content') div.classList.add('hidden');
+        });
+        document.getElementById(id).classList.remove('hidden');
+    }
