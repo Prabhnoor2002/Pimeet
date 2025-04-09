@@ -19,8 +19,48 @@
         <button class="theme-toggle" id="themeToggle">
             <i class="fas fa-moon"></i>
         </button>
-        <div class="profile" id="profileIcon"></div>
     </div>
+  <!-- Profile Icon -->
+ <button class="profile-button" id="profileToggle">
+            <img src="{{ url_for('get_profile_image', user_id=user.id) }}" alt="veer" class="profile-avatar">
+        </button>
+<!-- Profile Modal -->
+<div class="modal" id="profileModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Profile</h2>
+            <span class="close" id="closeModal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="profileForm">
+                <div class="form-group mb-2">
+                    <label for="profileName">Name</label>
+                    <input type="text" id="profileName" name="profileName" required class="form-control" value="{{ user.name }}">
+                </div>
+                <div class="form-group mb-2">
+                    <label for="profileEmail">Email</label>
+                    <input type="email" id="profileEmail" name="profileEmail" required class="form-control" value="{{ user.email }}">
+                </div>
+                <div class="form-group mb-2">
+                    <label for="profileRole">Role</label>
+                    <input type="text" id="profileRole" name="profileRole" class="form-control" value="{{ user.role }}" disabled>
+                </div>
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                </div>
+            </form>
+
+            <!-- Image Upload -->
+            <form action="/upload_profile" method="POST" enctype="multipart/form-data" class="mt-4">
+                <div class="form-group">
+                    <label for="profile_image">Upload Profile Picture</label>
+                    <input type="file" name="profile_image" class="form-control" required>
+                    <button type="submit" class="btn btn-primary mt-2">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">

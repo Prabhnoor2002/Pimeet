@@ -47,11 +47,17 @@ def logout():
 def signup():
     return handle_signup(request)
 
-
 @app.route('/admin_dashboard')
 @login_required(role='admin')
 def admin_dashboard():
-    return render_template('admindashboard.html')
+    user_details = {
+        'id': session.get('user_id'),
+        'name': session.get('username'),
+        'email': session.get('email'),
+        'role': session.get('role')
+    }
+    return render_template('admindashboard.html', user=user_details)
+
 @app.route('/trainer_dashboard')
 @login_required(role='trainer')
 def trainer_dashboard():
@@ -65,7 +71,13 @@ def trainer_dashboard():
 @app.route('/user_dashboard')
 @login_required(role='user')
 def user_dashboard():
-    return render_template('userdashboard.html')
+    user_details = {
+        'id': session.get('user_id'),
+        'name': session.get('username'),
+        'email': session.get('email'),
+        'role': session.get('role')
+    }
+    return render_template('userdashboard.html',user=user_details)
 
 @app.route('/upload_profile', methods=['POST'])
 @login_required()  

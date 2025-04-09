@@ -41,3 +41,21 @@ function showSection(sectionId) {
     sections.forEach(section => section.classList.add('hidden'));
     document.getElementById(sectionId).classList.remove('hidden');
 }
+
+document.getElementById("profileToggle").onclick = function () {
+    document.getElementById("profileModal").style.display = "block";
+};
+
+// Close profile modal
+document.getElementById("closeModal").onclick = function () {
+    document.getElementById("profileModal").style.display = "none";
+};
+
+// Close modal if click outside content
+window.onclick = function (event) {
+    const modal = document.getElementById("profileModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+};
+

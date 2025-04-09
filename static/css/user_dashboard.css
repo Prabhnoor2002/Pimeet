@@ -232,7 +232,7 @@ body {
 }
 .theme-toggle {
     position: fixed;
-    top: 20px;
+    top: 10px;
     right: 20px;
     z-index: 1000;
     font-size: 24px; /* Icon size */
@@ -243,4 +243,176 @@ body {
 
 .theme-toggle:hover {
     color: #333333; /* Slightly darker gray on hover */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--navbar-bg);
+    color: var(--navbar-text);
+    position: relative;
+  }
+  .navbar-right {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+   
+}
+.theme-toggle {
+    margin-top: 1px;
+    margin-right: 90px; 
+}
+.profile-toggle{
+    margin-top: 10px;
+}
+.theme-toggle,
+.profile-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #444;
+}
+
+.theme-toggle:hover,
+.profile-toggle:hover {
+    color: #007bff;
+}
+
+/* Modal Styles (Dark Mode Default) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #1a1a1a;
+    color: #a9a9a9;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="file"] {
+    padding: 8px;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 6px;
+    color: #ffffff;
+}
+
+.save-btn {
+    background-color: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+/* Profile Image Preview */
+#profileImagePreview {
+    display: block;
+    margin-top: 10px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #007bff;
+}
+
+/* Light Mode Modal Overrides */
+.light-mode .modal-content {
+    background-color: #ffffff;
+    color: #173447;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .close {
+    color: #173447;
+}
+
+.light-mode .form-group label {
+    color: #173447;
+}
+
+.light-mode .form-group input[type="text"],
+.light-mode .form-group input[type="email"],
+.light-mode .form-group input[type="file"] {
+    background-color: #ffffff;
+    color: #173447;
+    border: 1px solid #cce5ff;
+}
+
+.light-mode .save-btn {
+    background-color: #cce5ff;
+    color: #173447;
+}
+
+.light-mode .save-btn:hover {
+    background-color: #99c2ff;
+    color: #ffffff;
+}
+/* Profile Avatar Styling */
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Makes it round */
+    object-fit: cover;
+    border: 2px solid #007bff;
+}
+
+/* Ensure Profile Button is Positioned at Top Right */
+.profile-button {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    z-index: 1000;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }

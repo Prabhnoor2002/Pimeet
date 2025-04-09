@@ -28,3 +28,21 @@ sidebarToggle.addEventListener('click', () => {
     sidebar.classList.toggle('closed');
     content.classList.toggle('shifted');
 });
+// Open profile modal
+document.getElementById("profileToggle").onclick = function () {
+    document.getElementById("profileModal").style.display = "block";
+};
+
+// Close profile modal
+document.getElementById("closeModal").onclick = function () {
+    document.getElementById("profileModal").style.display = "none";
+};
+
+// Close modal if click outside content
+window.onclick = function (event) {
+    const modal = document.getElementById("profileModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+};
+
