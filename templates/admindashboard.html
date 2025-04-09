@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+<body>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>Pimeet</h2>
+        <a href="#" onclick="showSection('meetings')"><i class="fas fa-calendar-alt me-2"></i>Meetings</a>
+        <a href="#" onclick="showSection('trainers')"><i class="fas fa-users me-2"></i>Trainers</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content" id="content">
+        <h1 class="fw-bold">Admin Dashboard</h1>
+        <div id="meetings">
+            <div class="table-container">
+                <h3 class="text-center">All Meetings</h3>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Trainer Name</th>
+                            <th>No. of Students Joined</th>
+                            <th>Start Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Project Update</td><td>2025-04-05</td><td>John Doe</td><td>20</td><td>10:00 AM</td><td><span class="badge badge-success">Ongoing</span></td></tr>
+                        <tr><td>2</td><td>Team Sync</td><td>2025-04-06</td><td>Jane Smith</td><td>15</td><td>2:00 PM</td><td><span class="badge badge-warning">Scheduled</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="trainers" class="hidden">
+            <h2>Trainers Section</h2>
+            <p>Details about trainers will be displayed here.</p>
+        </div>
+    </div>
+
+    <!-- Correct JavaScript File -->
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+</body>
+</html>

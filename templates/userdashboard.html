@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}">
+</head>
+<body>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Theme Toggle Button -->
+    <div class="navbar-right">
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+        <div class="profile" id="profileIcon"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>Pimeet</h2>
+        <a href="#" onclick="showSection('profile')"><i class="fas fa-user me-2"></i>Profile</a>
+        <a href="#" onclick="toggleSubMenu('meetingsSubMenu')"><i class="fas fa-calendar-alt me-2"></i>Meetings</a>
+        <div id="meetingsSubMenu" class="hidden sub-menu">
+            <a href="#" onclick="showSection('previousMeetings')"><i class="fas fa-history me-2"></i>Previous Meetings</a>
+            <a href="#" onclick="showSection('upcomingMeetings')"><i class="fas fa-clock me-2"></i>Upcoming Meetings</a>
+            <a href="#" onclick="showSection('currentMeetings')"><i class="fas fa-play me-2"></i>Current Meetings</a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content" id="content">
+        <h1 class="fw-bold">User Dashboard</h1>
+
+        <!-- Profile Section -->
+        <div id="profile" class="hidden">
+            <h3 class="text-center">User Profile</h3>
+            <div class="profile-container">
+                <p><strong>Name:</strong> John Doe</p>
+                <p><strong>Email:</strong> john.doe@example.com</p>
+                <p><strong>Role:</strong> User</p>
+            </div>
+        </div>
+
+        <!-- Previous Meetings Section -->
+        <div id="previousMeetings" class="hidden">
+            <h3 class="text-center">Previous Meetings</h3>
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Marketing Strategy</td>
+                            <td>2025-03-30</td>
+                            <td>10:00 AM</td>
+                            <td>1 Hour</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Upcoming Meetings Section -->
+        <div id="upcomingMeetings" class="hidden">
+            <h3 class="text-center">Upcoming Meetings</h3>
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SEO Workshop</td>
+                            <td>2025-04-06</td>
+                            <td>2:00 PM</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm">Join</button>
+                                <button class="btn btn-danger btn-sm">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Current Meetings Section -->
+        <div id="currentMeetings" class="hidden">
+            <h3 class="text-center">Current Meetings</h3>
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Start Time</th>
+                            <th>Participants</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Digital Marketing</td>
+                            <td>10:00 AM</td>
+                            <td>10</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm">Join</button>
+                                <button class="btn btn-danger btn-sm">End</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/user_dashboard.js') }}"></script>
+</body>
+</html>

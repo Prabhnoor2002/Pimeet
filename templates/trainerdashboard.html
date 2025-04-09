@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/trainer_dashboard.css') }}">
+</head>
+
+<body>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Theme/Profile Buttons -->
+    <div class="navbar-right">
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+        <!-- Profile Button -->
+        <button class="profile-button" id="profileToggle">
+            <img src="{{ url_for('get_profile_image', user_id=user.id) }}" alt="veer" class="profile-avatar">
+        </button>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Profile</h2>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="profileName">Name</label>
+                        <input type="text" id="profileName" name="profileName" required value="{{ user.name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileEmail">Email</label>
+                        <input type="email" id="profileEmail" name="profileEmail" required value="{{ user.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileRole">Role</label>
+                        <input type="text" id="profileRole" name="profileRole" required value="{{ user.role }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="save-btn">Save Changes</button>
+                    </div>
+                </form>
+
+                <!-- Image Upload Form -->
+                <form action="/upload_profile" method="POST" enctype="multipart/form-data" class="mt-3">
+                    <div class="form-group">
+                        <label for="profile_image">Upload Profile Picture</label>
+                        <input type="file" name="profile_image" required class="form-control">
+                        <button type="submit" class="btn btn-primary mt-2">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>Pimeet</h2>
+        <a href="#" onclick="toggleSubmenu('meetingsSubmenu')"><i class="fas fa-calendar-alt me-2"></i>Meetings</a>
+        <div id="meetingsSubmenu" class="submenu hidden">
+            <a href="#" onclick="showSection('previousMeetings')"><i class="fas fa-history me-2"></i>Previous Meetings</a>
+            <a href="#" onclick="showSection('currentMeetings')"><i class="fas fa-play me-2"></i>Current Meetings</a>
+            <a href="#" onclick="showSection('upcomingMeetings')"><i class="fas fa-clock me-2"></i>Upcoming Meetings</a>
+            <a href="#" onclick="showSection('createMeeting')"><i class="fas fa-plus me-2"></i>Create Meeting</a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content" id="content">
+        <h1 class="fw-bold">Trainer Dashboard</h1>
+
+        <!-- Previous Meetings -->
+        <div id="previousMeetings" class="hidden">
+            <h3 class="text-center">Previous Meetings</h3>
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Marketing Basics</td>
+                            <td>2025-04-01</td>
+                            <td>Introduction to marketing strategies</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Current Meetings -->
+        <div id="currentMeetings" class="hidden">
+            <h3 class="text-center">Current Meetings</h3>
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Digital Marketing</td>
+                            <td>Discussion on digital marketing trends</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm">Join</button>
+                                <button class="btn btn-danger btn-sm">End</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Upcoming Meetings -->
+        <div id="upcomingMeetings" class="hidden">
+            <h3 class="text-center">Upcoming Meetings</h3>
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SEO Workshop</td>
+                            <td>2025-04-06</td>
+                            <td>2:00 PM</td>
+                            <td>Learn SEO techniques</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm">Edit</button>
+                                <button class="btn btn-danger btn-sm">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Create Meeting -->
+        <div id="createMeeting" class="hidden">
+            <h3 class="text-center">Create Meeting</h3>
+            <form class="create-meeting-form" onsubmit="return validateMeetingForm()">
+                <div class="form-group">
+                    <label for="meetingTitle">Meeting Title</label>
+                    <input type="text" id="meetingTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingDate">Date</label>
+                    <input type="date" id="meetingDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingTime">Time</label>
+                    <input type="time" id="meetingTime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingDescription">Description</label>
+                    <textarea id="meetingDescription" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success mt-3">Create Meeting</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Toggle modal
+        document.getElementById("profileToggle").onclick = function () {
+            document.getElementById("profileModal").style.display = "block";
+        };
+        document.getElementById("closeModal").onclick = function () {
+            document.getElementById("profileModal").style.display = "none";
+        };
+
+        // Hide modal when clicking outside
+        window.onclick = function (event) {
+            if (event.target == document.getElementById("profileModal")) {
+                document.getElementById("profileModal").style.display = "none";
+            }
+        };
+
+        // Sidebar submenu toggle
+        function toggleSubmenu(id) {
+            document.getElementById(id).classList.toggle("hidden");
+        }
+
+        // Section switching
+        function showSection(id) {
+            document.querySelectorAll('.content > div').forEach(div => {
+                if (div.id !== 'content') div.classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+        }
+    </script>
+
+</body>
+
+</html>

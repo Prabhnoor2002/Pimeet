@@ -1,0 +1,246 @@
+/* General Styles */
+body {
+    background-color: #000000; /* Default black background */
+    font-family: 'Poppins', sans-serif;
+    color: #a9a9a9; /* Dark gray text */
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #1a1a1a; /* Dark gray sidebar */
+    padding-top: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transition for open/close and light mode */
+}
+
+.sidebar.closed {
+    transform: translateX(-100%); /* Hide sidebar */
+}
+
+.sidebar h2 {
+    color: #ffffff; /* White text for sidebar heading */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 20px;
+    color: #a9a9a9; /* Dark gray links */
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #333333; /* Darker gray hover effect */
+    color: #ffffff; /* White text on hover */
+}
+
+/* Content Styles */
+.content {
+    margin-left: 260px;
+    padding: 20px;
+    transition: margin-left 0.3s ease; /* Smooth transition for content shift */
+}
+
+.content.shifted {
+    margin-left: 0; /* Shift content when sidebar is closed */
+}
+
+/* Sidebar Toggle Button Styles */
+.sidebar-toggle {
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    z-index: 1000;
+    font-size: 24px; /* Icon size */
+    color: #4a4a4a; /* Dark gray color for dark theme */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    color: #333333; /* Slightly darker gray on hover */
+}
+/* Table Container Styles */
+.table-container {
+    background: #1a1a1a; /* Dark gray table background */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transition: background-color 0.3s ease; /* Smooth transition for light mode */
+}
+
+.table th {
+    background-color: #333333; /* Darker gray for table headers */
+    color: #ffffff; /* White text for headers */
+    vertical-align: middle;
+}
+
+.table td {
+    background-color: #1a1a1a; /* Dark gray for table cells */
+    color: #a9a9a9; /* Dark gray text for cells */
+}
+
+/* Badge Styles */
+.badge-success {
+    background-color: #28a745; /* Green for success */
+    color: #ffffff;
+}
+
+.badge-warning {
+    background-color: #ffc107; /* Yellow for warning */
+    color: #000000;
+}
+
+/* Hidden Section */
+.hidden {
+    display: none;
+}
+
+/* Theme Toggle Button Styles */
+.toggle-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toggle-container label {
+    cursor: pointer;
+}
+
+/* Light Mode Styles */
+/* Light Mode Styles */
+.light-mode {
+    background-color: #ffffff; /* White background for light mode */
+    color: #173447; /* Dark Blue text for light mode */
+}
+
+/* Sidebar Styles for Light Mode */
+.light-mode .sidebar {
+    background-color: #cce5ff; /* Pastel Bright Blue sidebar background */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow for depth */
+}
+
+.light-mode .sidebar h2 {
+    color: #173447; /* Dark Blue text for sidebar heading */
+}
+
+.light-mode .sidebar a {
+    color: #173447; /* Dark Blue links */
+}
+
+.light-mode .sidebar a:hover {
+    background-color: #99c2ff; /* Pastel Blue hover effect */
+    color: #ffffff; /* White text on hover */
+}
+
+/* Content Styles for Light Mode */
+.light-mode .content {
+    color: #173447; /* Dark Blue text for content */
+}
+
+/* Table Styles for Light Mode */
+.light-mode .table-container {
+    background-color: #ffffff; /* White card background */
+    border: 1px solid #cce5ff; /* Pastel Bright Blue border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.light-mode .table th {
+    background-color: #cce5ff; /* Pastel Bright Blue for table headers */
+    color: #173447; /* Dark Blue text for headers */
+}
+
+.light-mode .table td {
+    background-color: #ffffff; /* White for table cells */
+    color: #173447; /* Dark Blue text for cells */
+}
+
+/* Sidebar Toggle Button Styles for Light Mode */
+.light-mode .sidebar-toggle {
+    color: #173447; /* Dark Blue color for toggle */
+}
+
+.light-mode .sidebar-toggle:hover {
+    color: #99c2ff; /* Pastel Blue on hover */
+}
+
+/* Theme Toggle Button Styles for Light Mode */
+.light-mode .theme-toggle {
+    color: #ff8000; /* Orange color for toggle */
+}
+
+.light-mode .theme-toggle:hover {
+    color: #99c2ff; /* Pastel Blue on hover */
+}
+
+/* Badge Styles for Light Mode */
+.light-mode .badge-success {
+    background-color: #cce5ff; /* Pastel Bright Blue for success */
+    color: #173447; /* Dark Blue text */
+}
+
+.light-mode .badge-warning {
+    background-color: #ffd1a3; /* Pastel Orange for warning */
+    color: #173447; /* Dark Blue text */
+}
+
+/* Button Styles for Light Mode */
+.light-mode button {
+    background-color: #cce5ff; /* Pastel Bright Blue button background */
+    color: #173447; /* Dark Blue text */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.light-mode button:hover {
+    background-color: #99c2ff; /* Pastel Blue hover effect */
+    color: #ffffff; /* White text */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* Input Fields for Light Mode */
+.light-mode input,
+.light-mode textarea {
+    background-color: #ffffff; /* White background */
+    color: #173447; /* Dark Blue text */
+    border: 1px solid #cce5ff; /* Pastel Bright Blue border */
+    padding: 10px;
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.light-mode input:focus,
+.light-mode textarea:focus {
+    border-color: #99c2ff; /* Pastel Blue border on focus */
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Stronger shadow on focus */
+}
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    font-size: 24px; /* Icon size */
+    color: #4a4a4a; /* Dark gray color for dark theme */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    color: #333333; /* Slightly darker gray on hover */
+}
