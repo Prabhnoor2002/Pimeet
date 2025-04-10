@@ -50,53 +50,53 @@ function disablePastDates() {
 }
 
 // ========================== Profile Modal ==========================
-const profileToggle = document.getElementById("profileToggle");
-const profileModal = document.getElementById("profileModal");
-const closeModal = document.getElementById("closeModal");
-const profileImageInput = document.getElementById("profileImage");
-const profileImagePreview = document.getElementById("profileImagePreview");
 
-const trainerData = {
-    name: "{{ user.name }}",
-    email: "{{ user.email }}",
-    role: "{{ user.role }}"
+// Open profile modal
+document.getElementById("profileToggle").onclick = function () {
+    document.getElementById("profileModal").style.display = "block";
 };
 
-profileToggle.addEventListener('click', () => {
-    document.getElementById('profileName').value = trainerData.name || '';
-    document.getElementById('profileEmail').value = trainerData.email || '';
-    document.getElementById('profileRole').value = trainerData.role || '';
-    profileImagePreview.src = '';
-    profileModal.style.display = 'block';
-});
-
-closeModal.addEventListener('click', () => profileModal.style.display = 'none');
-
-profileImageInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) profileImagePreview.src = URL.createObjectURL(file);
-    else profileImagePreview.src = '';
-});
-
-window.addEventListener('click', (e) => {
-    if (e.target === profileModal) profileModal.style.display = 'none';
-});
-
-document.getElementById("profileForm").onsubmit = function (e) {
-    e.preventDefault();
-    alert("Profile updated successfully!");
-    profileModal.style.display = "none";
+// Close profile modal
+document.getElementById("closeModal").onclick = function () {
+    document.getElementById("profileModal").style.display = "none";
 };
+
+// Close modal if click outside content
+window.onclick = function (event) {
+    const modal = document.getElementById("profileModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+};
+
+
 
 // ========================== Meeting Table Loader ==========================
 function loadMeetings() {
     fetch('/meetings')
         .then(response => response.json())
         .then(data => {
-            populateTable('previousMeetings', data.previous, 'previous');
-            populateTable('currentMeetings', data.current, 'current');
+            const now = new Date();
+
+            const updatedCurrent = [];
+            const updatedPrevious = [...data.previous];
+
+            data.current.forEach(meeting => {
+                const dateTimeStr = `${meeting.date}T${meeting.time}`;
+                const endTime = new Date(dateTimeStr);
+
+                // If current meeting has ended, push to previous
+                if (endTime < now) {
+                    updatedPrevious.push(meeting);
+                } else {
+                    updatedCurrent.push(meeting);
+                }
+            });
+
+            populateTable('previousMeetings', updatedPrevious, 'previous');
+            populateTable('currentMeetings', updatedCurrent, 'current');
             populateTable('upcomingMeetings', data.upcoming, 'upcoming');
-            populateAllMeetings('allMeetings', [...data.previous, ...data.current, ...data.upcoming]);
+            populateAllMeetings('allMeetings', [...updatedPrevious, ...updatedCurrent, ...data.upcoming]);
         })
         .catch(error => console.error('Error loading meetings:', error));
 }
@@ -205,4 +205,44 @@ function populateTable(sectionId, meetings, type) {
             });
         });
     }
-}
+} 
+
+const modal = document.getElementById("rescheduleModal");
+const closeBtn = document.getElementById("modalCloseBtn");
+const meetingIdInput = document.getElementById("modalMeetingId");
+
+// Open modal and set meeting ID
+function openRescheduleModal(meetingId) {
+    const modal = document.getElementById("rescheduleModal");
+    const meetingIdInput = document.getElementById("modalMeetingId");
+
+    if (modal && meetingIdInput) {
+      meetingIdInput.value = meetingId;
+      modal.style.display = "block";
+    }
+    disablePastDates();
+  }
+
+  // Close modal on clicking the close button
+  document.addEventListener("DOMContentLoaded", function () {
+    const closeBtn = document.getElementById("modalCloseBtn");
+    const modal = document.getElementById("rescheduleModal");
+
+    if (closeBtn && modal) {
+      closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+    }
+
+    // Optional: Close modal on outside click
+    window.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById("newDate");
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute("min", today);
+  });

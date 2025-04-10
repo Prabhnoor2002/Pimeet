@@ -1,8 +1,7 @@
 import datetime
 import sqlite3
 
-from flask import jsonify, redirect, request
-
+from flask import jsonify, redirect, request,flash, url_for
 
 def get_meet():
     now = datetime.datetime.now()
@@ -22,23 +21,20 @@ def get_meet():
                 'time': row[3],
                 'description': row[4]
             }
-            if meeting_dt.date() < now.date():
+
+            if meeting_dt < now:
                 previous.append(item)
             elif meeting_dt.date() == now.date():
-                if now.time() < meeting_dt.time():
-                    upcoming.append(item)
-                elif now.time() > meeting_dt.time():
-                    current.append(item)
-                else:
-                    current.append(item)
+                current.append(item)
             else:
                 upcoming.append(item)
 
     return jsonify({
         'previous': previous,
-        'current': current, 
+        'current': current,
         'upcoming': upcoming
     })
+
 def create_meet():
     title = request.form.get('meetingTitle')
     date = request.form.get('meetingDate')
@@ -110,3 +106,18 @@ def delete_meet(meeting_id):
         conn.commit()
 
     return jsonify({'success': True})
+def reschedule_meet():
+    meeting_id = request.form.get('meeting_id')
+    new_date = request.form.get('new_date')
+    new_time = request.form.get('new_time')
+
+    if meeting_id and new_date and new_time:
+        with sqlite3.connect('pimeet.db') as conn:
+            c = conn.cursor()
+            c.execute("UPDATE meetings SET date = ?, time = ? WHERE id = ?", (new_date, new_time, meeting_id))
+            conn.commit()
+        flash("Meeting rescheduled successfully.", "success")
+    else:
+        flash("Failed to reschedule. Please try again.", "danger")
+
+    return redirect(url_for('trainer_dashboard'))

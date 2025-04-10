@@ -6,7 +6,7 @@ from functools import wraps
 from flask import session, flash
 from uploadimg import handle_profile_image_upload
 from profileimg import get_image
-from meetings import get_meet, create_meet,edit_meet,delete_meet
+from meetings import get_meet, create_meet,edit_meet,delete_meet,reschedule_meet
 
 
 
@@ -109,6 +109,12 @@ def edit_meeting(meeting_id):
 @app.route('/delete_meeting/<int:meeting_id>', methods=['DELETE'])
 def delete_meeting(meeting_id):
     return delete_meet(meeting_id)
+
+@app.route('/reschedule_meeting', methods=['POST'])
+@login_required(role='trainer')
+def reschedule_meeting():
+    return reschedule_meet()
+
 
 if __name__ == '__main__':
     app.run(debug=True)
