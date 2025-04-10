@@ -203,3 +203,19 @@ body.light-mode a {
 body.light-mode a:hover {
     color: #99c2ff; /* Light blue hover effect for links in light mode */
 }
+.strength-meter {
+    height: 8px;
+    width: 100%;
+    background: #e0e0e0;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+
+#strength-bar {
+    height: 100%;
+    width: 0%;
+    background-color: red;
+    transition: width 0.3s ease-in-out, background-color 0.3s;
+}

@@ -6,6 +6,12 @@ document.getElementById('themeToggle').addEventListener('click', function () {
     icon.classList.toggle('fa-moon');
 });
 
+setTimeout(() => {
+    document.querySelectorAll('.toast-message').forEach(msg => {
+      msg.remove();
+    });
+  }, 4000);
+  
 document.getElementById('sidebarToggle').addEventListener('click', function () {
     document.getElementById('sidebar').classList.toggle('closed');
     document.getElementById('content').classList.toggle('shifted');

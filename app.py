@@ -114,7 +114,8 @@ def delete_meeting(meeting_id):
 @login_required(role='trainer')
 def reschedule_meeting():
     return reschedule_meet()
-
-
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+

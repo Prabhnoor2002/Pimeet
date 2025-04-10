@@ -40,3 +40,34 @@ function toggleSecretKeyField() {
         secretKeyGroup.style.display = 'none';
     }
 }
+function checkPasswordStrength() {
+    const password = document.getElementById("password").value;
+    const hint = document.getElementById("password-hint");
+    const bar = document.getElementById("strength-bar");
+
+    let strength = 0;
+
+    if (password.length >= 8) strength += 1;
+    if (/[a-z]/.test(password)) strength += 1;
+    if (/[A-Z]/.test(password)) strength += 1;
+    if (/\d/.test(password)) strength += 1;
+    if (/[@$!%*?&#^()\-_=+{};:,<.>]/.test(password)) strength += 1;
+
+    // Update the bar
+    bar.style.width = `${(strength / 5) * 100}%`;
+
+    if (strength <= 2) {
+        bar.style.backgroundColor = "red";
+        hint.textContent = "Weak password ❌";
+        hint.style.color = "red";
+    } else if (strength === 3 || strength === 4) {
+        bar.style.backgroundColor = "orange";
+        hint.textContent = "Moderate password ⚠️";
+        hint.style.color = "orange";
+    } else if (strength === 5) {
+        bar.style.backgroundColor = "green";
+        hint.textContent = "Strong password ✅";
+        hint.style.color = "green";
+    }
+}
+

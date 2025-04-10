@@ -4,6 +4,11 @@ function showSection(section) {
     document.getElementById('trainers').classList.add('hidden');
     document.getElementById(section).classList.remove('hidden');
 }
+setTimeout(() => {
+    document.querySelectorAll('.toast-message').forEach(msg => {
+      msg.remove();
+    });
+  }, 4000);
 
 // Theme toggle functionality
 const themeToggle = document.getElementById('themeToggle');
