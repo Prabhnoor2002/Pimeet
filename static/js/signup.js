@@ -40,34 +40,49 @@ function toggleSecretKeyField() {
         secretKeyGroup.style.display = 'none';
     }
 }
-function checkPasswordStrength() {
-    const password = document.getElementById("password").value;
-    const hint = document.getElementById("password-hint");
-    const bar = document.getElementById("strength-bar");
+document.addEventListener('DOMContentLoaded', () => {
+    const passwordInput = document.getElementById('password');
+    const strengthBar = document.getElementById('strength-bar');
 
+    passwordInput.addEventListener('input', () => {
+        const strength = calculateStrength(passwordInput.value);
+        updateStrengthBar(strength);
+    });
+});
+
+function calculateStrength(password) {
     let strength = 0;
 
     if (password.length >= 8) strength += 1;
-    if (/[a-z]/.test(password)) strength += 1;
     if (/[A-Z]/.test(password)) strength += 1;
+    if (/[a-z]/.test(password)) strength += 1;
     if (/\d/.test(password)) strength += 1;
-    if (/[@$!%*?&#^()\-_=+{};:,<.>]/.test(password)) strength += 1;
+    if (/[\W_]/.test(password)) strength += 1;
 
-    // Update the bar
+    return strength;
+}
+
+function updateStrengthBar(strength) {
+    const bar = document.getElementById('strength-bar');
     bar.style.width = `${(strength / 5) * 100}%`;
 
-    if (strength <= 2) {
-        bar.style.backgroundColor = "red";
-        hint.textContent = "Weak password ❌";
-        hint.style.color = "red";
-    } else if (strength === 3 || strength === 4) {
-        bar.style.backgroundColor = "orange";
-        hint.textContent = "Moderate password ⚠️";
-        hint.style.color = "orange";
-    } else if (strength === 5) {
-        bar.style.backgroundColor = "green";
-        hint.textContent = "Strong password ✅";
-        hint.style.color = "green";
+    switch (strength) {
+        case 0:
+        case 1:
+            bar.style.backgroundColor = 'red';
+            break;
+        case 2:
+            bar.style.backgroundColor = 'orange';
+            break;
+        case 3:
+            bar.style.backgroundColor = 'gold';
+            break;
+        case 4:
+            bar.style.backgroundColor = '#a4d600';
+            break;
+        case 5:
+            bar.style.backgroundColor = 'green';
+            break;
     }
 }
 
