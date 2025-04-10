@@ -114,6 +114,11 @@ def delete_meeting(meeting_id):
 @login_required(role='trainer')
 def reschedule_meeting():
     return reschedule_meet()
+
+@app.route('/meeting_room')
+# @login_required(role=['user','trainer','admin'])
+def meeting_room():
+    return render_template('meeting_room.html')
 if __name__ == '__main__':
     app.run(debug=True)
 

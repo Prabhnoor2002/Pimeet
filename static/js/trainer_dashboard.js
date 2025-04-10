@@ -83,140 +83,37 @@ function loadMeetings() {
         .then(response => response.json())
         .then(data => {
             const now = new Date();
-
             const updatedCurrent = [];
-            const updatedPrevious = [...data.previous];
+            const updatedPrevious = [];
+            const updatedUpcoming = [];
 
             data.current.forEach(meeting => {
-                const dateTimeStr = `${meeting.date}T${meeting.time}`;
-                const endTime = new Date(dateTimeStr);
+                const startTime = new Date(`${meeting.date}T${meeting.time}`);
+                const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // assuming 1-hour meeting
 
-                // If current meeting has ended, push to previous
                 if (endTime < now) {
+                    // Meeting has already ended
                     updatedPrevious.push(meeting);
+                } else if (startTime > now) {
+                    // Meeting has not started yet
+                    updatedUpcoming.push(meeting);
                 } else {
+                    // Meeting is ongoing
                     updatedCurrent.push(meeting);
                 }
             });
 
-            populateTable('previousMeetings', updatedPrevious, 'previous');
+            // Merge these with other categorized meetings if needed
+            const allPrevious = [...data.previous, ...updatedPrevious];
+            const allUpcoming = [...data.upcoming, ...updatedUpcoming];
+
+            populateTable('previousMeetings', allPrevious, 'previous');
             populateTable('currentMeetings', updatedCurrent, 'current');
-            populateTable('upcomingMeetings', data.upcoming, 'upcoming');
-            populateAllMeetings('allMeetings', [...updatedPrevious, ...updatedCurrent, ...data.upcoming]);
+            populateTable('upcomingMeetings', allUpcoming, 'upcoming');
+            populateAllMeetings('allMeetings', [...allPrevious, ...updatedCurrent, ...allUpcoming]);
         })
         .catch(error => console.error('Error loading meetings:', error));
 }
-
-function populateTable(sectionId, meetings, type) {
-    const section = document.querySelector(`#${sectionId} tbody`);
-    section.innerHTML = '';
-
-    if (meetings.length === 0) {
-        section.innerHTML = '<tr><td colspan="5" class="text-center">No meetings found.</td></tr>';
-        return;
-    }
-
-    meetings.forEach((meeting, index) => {
-        const row = document.createElement('tr');
-
-        if (type === 'previous') {
-            row.innerHTML = `
-                <td>${meeting.title}</td>
-                <td>${meeting.date}</td>
-                <td>${meeting.description}</td>
-            `;
-        } else if (type === 'current') {
-            row.innerHTML = `
-                <td>${meeting.title}</td>
-                <td>${meeting.description}</td>
-                <td>
-                    <button class="btn btn-primary btn-sm join-btn" data-id="${meeting.id}">Start</button>
-                    <button class="btn btn-danger btn-sm end-btn" data-id="${meeting.id}">End</button>
-                </td>
-            `;
-        } else if (type === 'upcoming') {
-            row.innerHTML = `
-                <td>${meeting.title}</td>
-                <td>${meeting.date}</td>
-                <td>${formatTime(meeting.time)}</td>
-                <td>${meeting.description}</td>
-                <td>
-                    <button class="btn btn-primary btn-sm edit-btn" data-index="${index}">Edit</button>
-                    <button class="btn btn-danger btn-sm cancel-btn" data-id="${meeting.id}">Cancel</button>
-                </td>
-            `;
-        }
-
-        section.appendChild(row);
-    });
-
-    if (type === 'upcoming') {
-        section.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', () => openEditModal(meetings[btn.dataset.index]));
-        });
-
-        section.querySelectorAll('.cancel-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You are about to cancel this meeting.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, cancel it!',
-                    cancelButtonText: 'No, keep it'
-                }).then(result => {
-                    if (result.isConfirmed) {
-                        fetch(`/delete_meeting/${btn.dataset.id}`, { method: 'DELETE' })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.success) {
-                                    Swal.fire('Cancelled!', 'Meeting has been canceled.', 'success');
-                                    loadMeetings();
-                                } else {
-                                    Swal.fire('Failed', 'Could not delete meeting.', 'error');
-                                }
-                            })
-                            .catch(err => Swal.fire('Error', 'Something went wrong!', 'error'));
-                    }
-                });
-            });
-        });
-    }
-
-    if (type === 'current') {
-        section.querySelectorAll('.end-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                Swal.fire({
-                    title: 'End this meeting?',
-                    text: "This will mark the meeting as ended.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, end it!',
-                    cancelButtonText: 'No, keep it'
-                }).then(result => {
-                    if (result.isConfirmed) {
-                        fetch(`/end_meeting/${btn.dataset.id}`, { method: 'POST' })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.success) {
-                                    Swal.fire('Ended!', 'Meeting has been ended.', 'success');
-                                    loadMeetings();
-                                } else {
-                                    Swal.fire('Failed', 'Could not end the meeting.', 'error');
-                                }
-                            })
-                            .catch(err => Swal.fire('Error', 'Something went wrong!', 'error'));
-                    }
-                });
-            });
-        });
-    }
-} 
-
-const modal = document.getElementById("rescheduleModal");
-const closeBtn = document.getElementById("modalCloseBtn");
-const meetingIdInput = document.getElementById("modalMeetingId");
-
 // Open modal and set meeting ID
 function openRescheduleModal(meetingId) {
     const modal = document.getElementById("rescheduleModal");
@@ -252,3 +149,42 @@ function openRescheduleModal(meetingId) {
     const today = new Date().toISOString().split('T')[0];
     dateInput.setAttribute("min", today);
   });
+  document.getElementById("editMeetingForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const id = document.getElementById("editMeetingId").value;
+    const title = document.getElementById("editTitle").value;
+    const date = document.getElementById("editDate").value;
+    const time = document.getElementById("editTime").value;
+    const description = document.getElementById("editDescription").value;
+
+    // Optional: Add client-side validation here if needed
+
+    fetch(`/edit_meeting/${id}`, {
+        method: "PUT",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, date, time, description })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire('Updated!', 'Meeting has been updated.', 'success');
+            closeEditModal();
+            loadMeetings();
+        } else {
+            Swal.fire('Failed', 'Could not update meeting.', 'error');
+        }
+    })
+    .catch(err => Swal.fire('Error', 'Something went wrong!', 'error'));
+});
+function openEditModal(meeting) {
+    document.getElementById("editMeetingId").value = meeting.id;
+    document.getElementById("editTitle").value = meeting.title;
+    document.getElementById("editDate").value = meeting.date;
+    document.getElementById("editTime").value = meeting.time;
+    document.getElementById("editDescription").value = meeting.description;
+    document.getElementById("editMeetingModal").style.display = "block";
+}
+function closeEditModal() {
+    document.getElementById("editMeetingModal").style.display = "none";
+}

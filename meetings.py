@@ -14,6 +14,8 @@ def get_meet():
 
         for row in rows:
             meeting_dt = datetime.datetime.strptime(f"{row[2]} {row[3]}", "%Y-%m-%d %H:%M")
+            end_time = meeting_dt + datetime.timedelta(hours=1)  # Assuming 1-hour duration
+
             item = {
                 'id': row[0],
                 'title': row[1],
@@ -22,9 +24,9 @@ def get_meet():
                 'description': row[4]
             }
 
-            if meeting_dt < now:
+            if end_time < now:
                 previous.append(item)
-            elif meeting_dt.date() == now.date():
+            elif meeting_dt <= now < end_time:
                 current.append(item)
             else:
                 upcoming.append(item)
