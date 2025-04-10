@@ -16,7 +16,15 @@ def init_db():
             role TEXT NOT NULL
         )
     ''')
-
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS meetings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            date TEXT NOT NULL,
+            time TEXT NOT NULL,
+            description TEXT NOT NULL
+        )
+    ''')
     # Check if 'profile_image' column already exists
     cursor.execute("PRAGMA table_info(users)")
     columns = [column[1] for column in cursor.fetchall()]

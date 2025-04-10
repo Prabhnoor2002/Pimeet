@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/trainer_dashboard.css') }}">
 </head>
+<body onload="disablePastDates()">
 
-<body>
     <!-- Sidebar Toggle Button -->
     <button class="sidebar-toggle" id="sidebarToggle">
         <i class="fas fa-bars"></i>
@@ -70,6 +70,8 @@
         <h2>Pimeet</h2>
         <a href="#" onclick="toggleSubmenu('meetingsSubmenu')"><i class="fas fa-calendar-alt me-2"></i>Meetings</a>
         <div id="meetingsSubmenu" class="submenu hidden">
+        <a href="#" onclick="showSection('allMeetings')"><i class="fas fa-list me-2"></i>All Meetings</a>
+
             <a href="#" onclick="showSection('previousMeetings')"><i class="fas fa-history me-2"></i>Previous Meetings</a>
             <a href="#" onclick="showSection('currentMeetings')"><i class="fas fa-play me-2"></i>Current Meetings</a>
             <a href="#" onclick="showSection('upcomingMeetings')"><i class="fas fa-clock me-2"></i>Upcoming Meetings</a>
@@ -93,16 +95,65 @@
                             <th>Description</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Marketing Basics</td>
-                            <td>2025-04-01</td>
-                            <td>Introduction to marketing strategies</td>
-                        </tr>
-                    </tbody>
-                </table>
+                     <tbody>
+                {% for meet in meetings.previous %}
+                <tr>
+                    <td>{{ meet.title }}</td>
+                    <td>{{ meet.date }}</td>
+                    <td>{{ meet.time }}</td>
+                    <td>{{ meet.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>                </table>
             </div>
         </div>
+
+<!-- All Meetings Section -->
+<div id="allMeetings" class="hidden">
+    <h3 class="text-center">All Meetings</h3>
+    <div class="table-container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+           <tbody>
+                {% for meet in meetings.previous %}
+                <tr>
+                    <td>{{ meet.title }}</td>
+                    <td>{{ meet.date }}</td>
+                    <td>{{ meet.time }}</td>
+                    <td>{{ meet.description }}</td>
+                    <td>Past</td>
+                </tr>
+                {% endfor %}
+                {% for meet in meetings.current %}
+                <tr>
+                    <td>{{ meet.title }}</td>
+                    <td>{{ meet.date }}</td>
+                    <td>{{ meet.time }}</td>
+                    <td>{{ meet.description }}</td>
+                    <td>Ongoing</td>
+                </tr>
+                {% endfor %}
+                {% for meet in meetings.upcoming %}
+                <tr>
+                    <td>{{ meet.title }}</td>
+                    <td>{{ meet.date }}</td>
+                    <td>{{ meet.time }}</td>
+                    <td>{{ meet.description }}</td>
+                    <td>Upcoming</td>
+                </tr>
+                {% endfor %}
+            </tbody>        </table>
+    </div>
+</div>
 
         <!-- Current Meetings -->
         <div id="currentMeetings" class="hidden">
@@ -117,15 +168,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Digital Marketing</td>
-                            <td>Discussion on digital marketing trends</td>
-                            <td>
-                                <button class="btn btn-primary btn-sm">Join</button>
-                                <button class="btn btn-danger btn-sm">End</button>
-                            </td>
-                        </tr>
-                    </tbody>
+    {% for meet in meetings.current %}
+    <tr>
+        <td>{{ meet.title }}</td>
+        <td>{{ meet.description }}</td>
+        <td>
+            <button class="btn btn-primary btn-sm">Join</button>
+            <button class="btn btn-danger btn-sm">End</button>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
                 </table>
             </div>
         </div>
@@ -145,45 +199,85 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>SEO Workshop</td>
-                            <td>2025-04-06</td>
-                            <td>2:00 PM</td>
-                            <td>Learn SEO techniques</td>
-                            <td>
-                                <button class="btn btn-primary btn-sm">Edit</button>
-                                <button class="btn btn-danger btn-sm">Cancel</button>
-                            </td>
-                        </tr>
-                    </tbody>
+    {% for meet in meetings.upcoming %}
+    <tr>
+        <td>{{ meet.title }}</td>
+        <td>{{ meet.date }}</td>
+        <td>{{ meet.time }}</td>
+        <td>{{ meet.description }}</td>
+        <td>
+            <button class="btn btn-primary btn-sm">Edit</button>
+            <button class="btn btn-danger btn-sm">Cancel</button>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Create Meeting -->
-        <div id="createMeeting" class="hidden">
-            <h3 class="text-center">Create Meeting</h3>
-            <form class="create-meeting-form" onsubmit="return validateMeetingForm()">
-                <div class="form-group">
-                    <label for="meetingTitle">Meeting Title</label>
-                    <input type="text" id="meetingTitle" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="meetingDate">Date</label>
-                    <input type="date" id="meetingDate" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="meetingTime">Time</label>
-                    <input type="time" id="meetingTime" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="meetingDescription">Description</label>
-                    <textarea id="meetingDescription" class="form-control" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-success mt-3">Create Meeting</button>
-            </form>
+<!-- Create Meeting Section -->
+<div id="createMeeting" class="hidden">
+    <h3 class="text-center">Create Meeting</h3>
+    <form class="create-meeting-form" action="/create_meeting" method="POST" onsubmit="return validateMeetingForm()">
+        <div class="form-group">
+            <label for="meetingTitle">Meeting Title</label>
+            <input type="text" id="meetingTitle" name="meetingTitle" class="form-control" required>
         </div>
+        <div class="form-group">
+            <label for="meetingDate">Date</label>
+            <input type="date" id="meetingDate" name="meetingDate" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="meetingTime">Time</label>
+            <input type="time" id="meetingTime" name="meetingTime" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="meetingDescription">Description</label>
+            <textarea id="meetingDescription" name="meetingDescription" class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Create Meeting</button>
+    </form>
+</div>
+<!-- Edit Meeting Modal -->
+<div class="modal" id="editMeetingModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="editMeetingForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Meeting</h5>
+            <!-- <button type="button" class="btn-close" onclick="closeEditModal()"></button> -->
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="editMeetingId">
+            <div class="mb-3">
+              <label for="editTitle" class="form-label">Title</label>
+              <input type="text" class="form-control" id="editTitle" required>
+            </div>
+            <div class="mb-3">
+              <label for="editDate" class="form-label">Date</label>
+              <input type="date" class="form-control" id="editDate" required>
+            </div>
+            <div class="mb-3">
+              <label for="editTime" class="form-label">Time</label>
+              <input type="time" class="form-control" id="editTime" required>
+            </div>
+            <div class="mb-3">
+              <label for="editDescription" class="form-label">Description</label>
+              <textarea class="form-control" id="editDescription" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+  
+
+    
 
     <!-- JavaScript -->
     

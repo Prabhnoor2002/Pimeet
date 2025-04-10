@@ -6,6 +6,7 @@ from functools import wraps
 from flask import session, flash
 from uploadimg import handle_profile_image_upload
 from profileimg import get_image
+from meetings import get_meet, create_meet,edit_meet,delete_meet
 
 
 
@@ -64,10 +65,15 @@ def trainer_dashboard():
     user_details = {
         'id': session.get('user_id'),
         'name': session.get('username'),
-        'email':session.get('email'),
+        'email': session.get('email'),
         'role': session.get('role')
     }
-    return render_template('trainerdashboard.html', user=user_details)
+
+    # Call get_meet() and extract data
+    meeting_data = get_meet().get_json()  # get_meet() returns a Response, so we use .get_json()
+
+    return render_template('trainerdashboard.html', user=user_details, meetings=meeting_data)
+
 @app.route('/user_dashboard')
 @login_required(role='user')
 def user_dashboard():
@@ -82,7 +88,6 @@ def user_dashboard():
 @app.route('/upload_profile', methods=['POST'])
 @login_required()  
 def upload_profile():
-    print('pk upload')
     return handle_profile_image_upload()
 
 @app.route('/get_profile_image/<int:user_id>')
@@ -91,6 +96,19 @@ def get_profile_image(user_id):
     if image_blob:
         return Response(image_blob, mimetype='image/png')  
     return 'No Image Found', 404
+@app.route('/meetings', methods=['GET'])
+def get_meeting():
+     return get_meet()
+@app.route('/create_meeting', methods=['POST'])
+def create_meeting():
+    return create_meet()
+@app.route('/edit_meeting/<int:meeting_id>', methods=['PUT'])
+def edit_meeting(meeting_id):
+    return edit_meet(meeting_id)
+
+@app.route('/delete_meeting/<int:meeting_id>', methods=['DELETE'])
+def delete_meeting(meeting_id):
+    return delete_meet(meeting_id)
 
 if __name__ == '__main__':
     app.run(debug=True)

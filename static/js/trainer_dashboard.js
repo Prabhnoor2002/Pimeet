@@ -1,4 +1,4 @@
-// Toggle theme
+// ========================== Theme & Sidebar ==========================
 document.getElementById('themeToggle').addEventListener('click', function () {
     document.body.classList.toggle('light-mode');
     const icon = this.querySelector('i');
@@ -6,25 +6,24 @@ document.getElementById('themeToggle').addEventListener('click', function () {
     icon.classList.toggle('fa-moon');
 });
 
-// Sidebar toggle
 document.getElementById('sidebarToggle').addEventListener('click', function () {
     document.getElementById('sidebar').classList.toggle('closed');
     document.getElementById('content').classList.toggle('shifted');
 });
 
-// Show section
+// ========================== Section Handling ==========================
 function showSection(sectionId) {
     const sections = document.querySelectorAll('.content > div');
     sections.forEach(section => section.classList.add('hidden'));
-    document.getElementById(sectionId).classList.remove('hidden');
+    document.getElementById(sectionId)?.classList.remove('hidden');
 }
 
-// Submenu toggle
-function toggleSubmenu(submenuId) {
-    document.getElementById(submenuId).classList.toggle('hidden');
+// Sidebar submenu toggle
+function toggleSubmenu(id) {
+    document.getElementById(id)?.classList.toggle("hidden");
 }
 
-// Validate meeting form
+// ========================== Date Validation ==========================
 function validateMeetingForm() {
     const meetingDate = document.getElementById('meetingDate').value;
     const meetingTime = document.getElementById('meetingTime').value;
@@ -38,125 +37,172 @@ function validateMeetingForm() {
     return true;
 }
 
-// Disable past dates
 function disablePastDates() {
     const input = document.getElementById('meetingDate');
+    if (!input) return;
+
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     input.min = `${yyyy}-${mm}-${dd}`;
+    input.max = `${yyyy + 1}-${mm}-${dd}`;
 }
 
+// ========================== Profile Modal ==========================
+const profileToggle = document.getElementById("profileToggle");
+const profileModal = document.getElementById("profileModal");
+const closeModal = document.getElementById("closeModal");
+const profileImageInput = document.getElementById("profileImage");
+const profileImagePreview = document.getElementById("profileImagePreview");
 
-    const profileToggle = document.getElementById("profileToggle");
-    const profileModal = document.getElementById("profileModal");
-    const closeModal = document.getElementById("closeModal");
-    const profileImageInput = document.getElementById("profileImage");
-    const profileImagePreview = document.getElementById("profileImagePreview");
-
-    profileToggle.onclick = () => {
-        profileModal.style.display = "block";
-    };
-
-    closeModal.onclick = () => {
-        profileModal.style.display = "none";
-    };
-
-    window.onclick = (e) => {
-        if (e.target === profileModal) {
-            profileModal.style.display = "none";
-        }
-    };
-
-    profileImageInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            profileImagePreview.src = URL.createObjectURL(file);
-        }
-    };
-
-    // You can pre-fill form fields here from user data if available
-    document.getElementById("profileForm").onsubmit = function(e) {
-        e.preventDefault();
-        alert("Profile updated successfully!");
-        profileModal.style.display = "none";
-    };
-// Simulated trainer data (replace these values using templating engine if needed)
 const trainerData = {
-    name: "{{ user.name }}",    // or hardcode for now: "John Doe"
-    email: "{{ user.email }}",  // or: "john@example.com"
-    role: "{{ user.role }}"     // or: "Trainer"
+    name: "{{ user.name }}",
+    email: "{{ user.email }}",
+    role: "{{ user.role }}"
 };
 
-// Show profile modal & auto-fill values
-document.getElementById('profileToggle').addEventListener('click', function () {
+profileToggle.addEventListener('click', () => {
     document.getElementById('profileName').value = trainerData.name || '';
     document.getElementById('profileEmail').value = trainerData.email || '';
     document.getElementById('profileRole').value = trainerData.role || '';
-
-    // Clear previous image preview (optional)
-    document.getElementById('profileImagePreview').src = '';
-
-    // Show modal
-    document.getElementById('profileModal').style.display = 'block';
+    profileImagePreview.src = '';
+    profileModal.style.display = 'block';
 });
 
-// Close modal on X click
-document.getElementById('closeModal').addEventListener('click', function () {
-    document.getElementById('profileModal').style.display = 'none';
+closeModal.addEventListener('click', () => profileModal.style.display = 'none');
+
+profileImageInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) profileImagePreview.src = URL.createObjectURL(file);
+    else profileImagePreview.src = '';
 });
 
-// Optional: Close modal if clicked outside
-window.onclick = function (event) {
-    const modal = document.getElementById('profileModal');
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+window.addEventListener('click', (e) => {
+    if (e.target === profileModal) profileModal.style.display = 'none';
+});
+
+document.getElementById("profileForm").onsubmit = function (e) {
+    e.preventDefault();
+    alert("Profile updated successfully!");
+    profileModal.style.display = "none";
 };
 
-// Show image preview when selected
-document.getElementById('profileImage').addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    const preview = document.getElementById('profileImagePreview');
+// ========================== Meeting Table Loader ==========================
+function loadMeetings() {
+    fetch('/meetings')
+        .then(response => response.json())
+        .then(data => {
+            populateTable('previousMeetings', data.previous, 'previous');
+            populateTable('currentMeetings', data.current, 'current');
+            populateTable('upcomingMeetings', data.upcoming, 'upcoming');
+            populateAllMeetings('allMeetings', [...data.previous, ...data.current, ...data.upcoming]);
+        })
+        .catch(error => console.error('Error loading meetings:', error));
+}
 
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            preview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    } else {
-        preview.src = '';
+function populateTable(sectionId, meetings, type) {
+    const section = document.querySelector(`#${sectionId} tbody`);
+    section.innerHTML = '';
+
+    if (meetings.length === 0) {
+        section.innerHTML = '<tr><td colspan="5" class="text-center">No meetings found.</td></tr>';
+        return;
     }
-});
-document.addEventListener('DOMContentLoaded', function () {
-    disablePastDates();
-});
-    // Toggle modal
-    document.getElementById("profileToggle").onclick = function () {
-        document.getElementById("profileModal").style.display = "block";
-    };
-    document.getElementById("closeModal").onclick = function () {
-        document.getElementById("profileModal").style.display = "none";
-    };
 
-    // Hide modal when clicking outside
-    window.onclick = function (event) {
-        if (event.target == document.getElementById("profileModal")) {
-            document.getElementById("profileModal").style.display = "none";
+    meetings.forEach((meeting, index) => {
+        const row = document.createElement('tr');
+
+        if (type === 'previous') {
+            row.innerHTML = `
+                <td>${meeting.title}</td>
+                <td>${meeting.date}</td>
+                <td>${meeting.description}</td>
+            `;
+        } else if (type === 'current') {
+            row.innerHTML = `
+                <td>${meeting.title}</td>
+                <td>${meeting.description}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm join-btn" data-id="${meeting.id}">Start</button>
+                    <button class="btn btn-danger btn-sm end-btn" data-id="${meeting.id}">End</button>
+                </td>
+            `;
+        } else if (type === 'upcoming') {
+            row.innerHTML = `
+                <td>${meeting.title}</td>
+                <td>${meeting.date}</td>
+                <td>${formatTime(meeting.time)}</td>
+                <td>${meeting.description}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm edit-btn" data-index="${index}">Edit</button>
+                    <button class="btn btn-danger btn-sm cancel-btn" data-id="${meeting.id}">Cancel</button>
+                </td>
+            `;
         }
-    };
 
-    // Sidebar submenu toggle
-    function toggleSubmenu(id) {
-        document.getElementById(id).classList.toggle("hidden");
-    }
+        section.appendChild(row);
+    });
 
-    // Section switching
-    function showSection(id) {
-        document.querySelectorAll('.content > div').forEach(div => {
-            if (div.id !== 'content') div.classList.add('hidden');
+    if (type === 'upcoming') {
+        section.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => openEditModal(meetings[btn.dataset.index]));
         });
-        document.getElementById(id).classList.remove('hidden');
+
+        section.querySelectorAll('.cancel-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You are about to cancel this meeting.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, cancel it!',
+                    cancelButtonText: 'No, keep it'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        fetch(`/delete_meeting/${btn.dataset.id}`, { method: 'DELETE' })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('Cancelled!', 'Meeting has been canceled.', 'success');
+                                    loadMeetings();
+                                } else {
+                                    Swal.fire('Failed', 'Could not delete meeting.', 'error');
+                                }
+                            })
+                            .catch(err => Swal.fire('Error', 'Something went wrong!', 'error'));
+                    }
+                });
+            });
+        });
     }
+
+    if (type === 'current') {
+        section.querySelectorAll('.end-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'End this meeting?',
+                    text: "This will mark the meeting as ended.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, end it!',
+                    cancelButtonText: 'No, keep it'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        fetch(`/end_meeting/${btn.dataset.id}`, { method: 'POST' })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('Ended!', 'Meeting has been ended.', 'success');
+                                    loadMeetings();
+                                } else {
+                                    Swal.fire('Failed', 'Could not end the meeting.', 'error');
+                                }
+                            })
+                            .catch(err => Swal.fire('Error', 'Something went wrong!', 'error'));
+                    }
+                });
+            });
+        });
+    }
+}
